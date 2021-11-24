@@ -1,13 +1,14 @@
 const bcrypt = require('bcrypt');
-const saltRounds = 10;
 const jwt = require('jsonwebtoken');
+const { $where } = require('../models/Employee.js');
 const Employee = require('../models/Employee.js');
-const secret = 'mysecretsshhh';
 const User = require('../models/User.js');
+const salt = process.env.SALT;
+const secret = process.env.TOKEN_SECRET;
 
 class Users {
 	hashPassword = (password) => {
-		return bcrypt.hashSync(password, bcrypt.genSaltSync(saltRounds));
+		return bcrypt.hashSync(password, bcrypt.genSaltSync(+salt));
 	};
 
 	isPasswordValid = (password, hashedPwd) => {
@@ -15,12 +16,9 @@ class Users {
 	};
 
 	generateToken = (user) => {
-		const {
-			_id,
-			username,
-			employeeNumber: { jobTitle, email },
-		} = user;
-		return jwt.sign({ _id, username, jobTitle, email }, secret, {
+		const { employee } = user;
+		const { employeeNumber, officeCode, jobTitle } = employee;
+		return jwt.sign({ employeeNumber, officeCode, jobTitle }, secret, {
 			expiresIn: '1h',
 		});
 	};
@@ -42,11 +40,22 @@ class Users {
 	};
 
 	userLogin = (req, res) => {
-		User.findOne({ username: req.body.username })
+		User.aggregate([
+			{ $match: { username: req.body.username } },
+			{
+				$lookup: {
+					from: 'employees',
+					localField: 'employeeNumber',
+					foreignField: 'employeeNumber',
+					as: 'employee',
+				},
+			},
+			{ $unwind: '$employee' },
+		])
 			// .populate('employeeNumber')
-			.populate({ path: 'employeeNumber', select: 'jobTitle email' })
-			.then((user) => {
-				// const user = users[0];
+			// .populate({ path: 'employeeNumber', select: 'jobTitle email' })
+			.then((users) => {
+				const user = users[0];
 				if (user) {
 					if (this.isPasswordValid(req.body.password, user.password)) {
 						const token = this.generateToken(user);

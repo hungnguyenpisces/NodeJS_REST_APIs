@@ -3,18 +3,17 @@ const jwt = require('jsonwebtoken');
 const auth = (roles) => {
 	return (req, res, next) => {
 		const authorization = req.headers.authorization;
-		const secret = 'mysecretsshhh';
+		const secret = process.env.TOKEN_SECRET;
 		try {
 			const token = authorization.replace('Bearer ', '');
-			const decoded = jwt.verify(token, secret);
-			const role = decoded.jobTitle;
+			const data = jwt.verify(token, secret);
+			const role = data.jobTitle;
 			if (roles.includes(role)) {
-				next();
-			} else {
-				res.status(401).json('Unauthorized');
+				return next(data);
 			}
+			return res.status(403).json('Forbidden');
 		} catch (error) {
-			res.status(401).json('Unauthorized C');
+			res.status(401).json('Unauthorized');
 		}
 	};
 };

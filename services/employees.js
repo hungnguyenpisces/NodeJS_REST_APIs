@@ -1,7 +1,7 @@
 const Employee = require('../models/Employee.js');
 
 class EmployeeService {
-	getAllEmployees = (req, res) => {
+	getAllEmployees = (data, req, res, next) => {
 		Employee.find({}, (err, employees) => {
 			if (err) {
 				res.send(err);
@@ -10,7 +10,7 @@ class EmployeeService {
 		});
 	};
 
-	getEmployeeByNumber = (req, res) => {
+	getEmployeeByNumber = (data, req, res, next) => {
 		Employee.find(
 			{ employeeNumber: req.params.employeeNumber },
 			(err, employee) => {
@@ -22,7 +22,7 @@ class EmployeeService {
 		);
 	};
 
-	createEmployee = (req, res) => {
+	createEmployee = (data, req, res, next) => {
 		const employee = new Employee(req.body);
 		employee
 			.save()
@@ -30,7 +30,7 @@ class EmployeeService {
 			.catch((err) => res.status(400).json('Error: ' + err));
 	};
 
-	updateEmployee = (req, res) => {
+	updateEmployee = (data, req, res, next) => {
 		Employee.findOneAndUpdate(
 			{ employeeNumber: req.body.employeeNumber },
 			req.body,
@@ -44,7 +44,7 @@ class EmployeeService {
 		);
 	};
 
-	updatePartialEmployee = (req, res) => {
+	updatePartialEmployee = (data, req, res, next) => {
 		Employee.findOneAndUpdate(
 			{ employeeNumber: req.body.employeeNumber },
 			req.body,
@@ -57,7 +57,7 @@ class EmployeeService {
 		);
 	};
 
-	deleteEmployee = (req, res) => {
+	deleteEmployee = (data, req, res, next) => {
 		Employee.findOneAndDelete(
 			{ employeeNumber: req.params.employeeNumber },
 			(err, employee) => {
