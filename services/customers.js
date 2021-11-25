@@ -7,76 +7,35 @@ class CustomersServices {
 		switch (data.jobTitle) {
 			case 'Staff':
 				Customer.aggregate([{ $match: { salesRepEmployeeNumber } }])
-					.then((customers) => res.json(customers))
+					.then((customers) => res.json({ total: customers.length, customers }))
 					.catch((err) => res.status(400).json('Error: ' + err));
 
 				break;
 			case 'Leader':
-				Customer.aggregate([
-					{ $match: { salesRepEmployeeNumber } },
-					{
-						$lookup: {
-							from: 'employees',
-							localField: 'salesRepEmployeeNumber',
-							foreignField: 'employeeNumber',
-							as: 'employee',
-						},
-					},
-					// { $unwind: '$employee' },
-					{
-						$lookup: {
-							from: 'employees',
-							localField: 'employee.employeeNumber',
-							foreignField: 'reportsTo',
-							as: 'reportsTo',
-						},
-					},
-					// { $unwind: '$reportsTo' },
-					//lookup customer from reportsto employeeNumber
-					{
-						$lookup: {
-							from: 'customers',
-							localField: 'reportsTo.employeeNumber',
-							foreignField: 'salesRepEmployeeNumber',
-							as: 'customerFromStaff',
-						},
-					},
-					// { $unwind: '$customerFromStaff', },
-					{
-						$project: {
-							_id: 1,
-							customerNumber: 1,
-							customerName: 1,
-							contactLastName: 1,
-							contactFirstName: 1,
-							phone: 1,
-							addressLine1: 1,
-							addressLine2: 1,
-							city: 1,
-							state: 1,
-							postalCode: 1,
-							country: 1,
-							salesRepEmployeeNumber: 1,
-							creditLimit: 1,
-							customerFromStaff: 1,
-						},
-					},
-					// { $project: { customerFromStaff: 1 } },
-				])
-					.then((customers) => {
-						res.json(customers);
+				let employeeNumbers = [data.employeeNumber];
+				Employee.find({ reportsTo: data.employeeNumber })
+					.then((employees) => {
+						employees.forEach((employee) => {
+							employeeNumbers.push(employee.employeeNumber);
+						});
+						Customer.aggregate([
+							{ $match: { salesRepEmployeeNumber: { $in: employeeNumbers } } },
+						])
+							.then((customers) =>
+								res.json({ total: customers.length, customers })
+							)
+							.catch((err) => res.status(400).json('Error: ' + err));
 					})
-					.catch((err) => {
-						res.send(err);
-					});
+					.catch((err) => res.status(400).json('Error: ' + err));
+
 				break;
 
 			default:
-				Customer.find({}, (err, customer) => {
+				Customer.find({}, (err, customers) => {
 					if (err) {
 						res.send(err);
 					}
-					res.json(customer);
+					res.json({ total: customers.length, customers });
 				});
 				break;
 		}

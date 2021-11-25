@@ -2,15 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const user = new Schema({
-	username: {
-		type: String,
-		required: true,
-		unique: true,
-		minLength: 3,
-		maxLength: 20,
-	},
+	username: { type: String, required: true, unique: true, minLength: 3, maxLength: 20, },
 	password: { type: String, required: true, minLength: 6, maxLength: 100 },
-	employeeNumber: { type: Number, required: true, unique: true, min: 1, ref: 'Employee' },
+	employeeNumber: { type: Number, required: true, unique: true, min: 1 },
 });
 const User = mongoose.model('User', user);
 
