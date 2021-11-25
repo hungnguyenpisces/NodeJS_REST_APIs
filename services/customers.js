@@ -96,31 +96,36 @@ class CustomersServices {
 		const newCustomer = new Customer(req.body);
 		switch (data.jobTitle) {
 			case 'Staff':
-				if (req.body.salesRepEmployeeNumber === data.employeeNumber) {
-					newCustomer.save((err, customer) => {
-						if (err) {
-							res.send(err);
-						}
-						res.json(customer);
-					});
-				} else {
-					res.send('you cannot create customer for other employee');
-				}
-				break;
-			case 'Leader':
+				//check customerNumber is exist
 				try {
-					if (req.body.salesRepEmployeeNumber === data.employeeNumber) {
+					const customer = await Customer.findOne({
+						customerNumber: req.body.customerNumber,
+						salesRepEmployeeNumber: data.employeeNumber,
+					});
+					if (customer) {
+						res.send('Customer already exists');
+					} else {
 						newCustomer.save((err, customer) => {
 							if (err) {
 								res.send(err);
 							}
 							res.json(customer);
 						});
+					}
+				} catch (error) {
+					res.send(error + ' or custom not found');
+				}
+				break;
+			case 'Leader':
+				//check customer is exist
+				try {
+					const customer = await Customer.findOne({
+						customerNumber: req.body.customerNumber,
+					});
+					if (customer) {
+						res.send('Customer already exists');
 					} else {
-						const employee = await Employee.findOne({
-							employeeNumber: req.body.salesRepEmployeeNumber,
-						});
-						if (employee.reportsTo === data.employeeNumber) {
+						if (req.body.salesRepEmployeeNumber === data.employeeNumber) {
 							newCustomer.save((err, customer) => {
 								if (err) {
 									res.send(err);
@@ -128,22 +133,46 @@ class CustomersServices {
 								res.json(customer);
 							});
 						} else {
-							res.send(
-								'you cannot create customer for other employee in other team'
-							);
+							const employee = await Employee.findOne({
+								employeeNumber: req.body.salesRepEmployeeNumber,
+							});
+							if (employee.reportsTo === data.employeeNumber) {
+								newCustomer.save((err, customer) => {
+									if (err) {
+										res.send(err);
+									}
+									res.json(customer);
+								});
+							} else {
+								res.send(
+									'you cannot create customer for other employee in other team'
+								);
+							}
 						}
 					}
 				} catch (error) {
-					res.send(error);
+					res.send(error + ' or custom not found');
 				}
 				break;
 			default:
-				newCustomer.save((err, customer) => {
-					if (err) {
-						res.send(err);
+				//check customer is exist
+				try {
+					const customer = await Customer.findOne({
+						customerNumber: req.body.customerNumber,
+					});
+					if (customer) {
+						res.send('Customer already exists');
+					} else {
+						newCustomer.save((err, customer) => {
+							if (err) {
+								res.send(err);
+							}
+							res.json(customer);
+						});
 					}
-					res.json(customer);
-				});
+				} catch (error) {
+					res.send(error + ' or custom not found');
+				}
 				break;
 		}
 	};

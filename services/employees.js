@@ -23,11 +23,31 @@ class EmployeeService {
 	};
 
 	createEmployee = (data, req, res, next) => {
-		const employee = new Employee(req.body);
-		employee
-			.save()
-			.then(() => res.json(employee))
-			.catch((err) => res.status(400).json('Error: ' + err));
+		//check if employee already exists
+		Employee.find(
+			{ employeeNumber: req.body.employeeNumber },
+			(err, employees) => {
+				if (err) {
+					res.status(500).json({
+						message: 'Internal server error',
+						error: err,
+					});
+				}
+				if (employees.length > 0) {
+					res.status(400).send({
+						message: 'Employee already exists',
+					});
+				} else {
+					const newEmployee = new Employee(req.body);
+					newEmployee.save((err, employee) => {
+						if (err) {
+							res.send(err);
+						}
+						res.json(employee);
+					});
+				}
+			}
+		);
 	};
 
 	updateEmployee = (data, req, res, next) => {
