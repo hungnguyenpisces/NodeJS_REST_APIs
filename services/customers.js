@@ -2,9 +2,9 @@ const Customer = require('../models/Customer.js');
 const Employee = require('../models/Employee.js');
 
 class CustomersServices {
-	getAllCustomers = (data, req, res, next) => {
-		const salesRepEmployeeNumber = data.employeeNumber;
-		switch (data.jobTitle) {
+	getAllCustomers = (req, res) => {
+		const salesRepEmployeeNumber = res.locals.auth.employeeNumber;
+		switch (res.locals.auth.jobTitle) {
 			case 'Staff':
 				Customer.aggregate([{ $match: { salesRepEmployeeNumber } }])
 					.then((customers) => res.json({ total: customers.length, customers }))
@@ -12,8 +12,8 @@ class CustomersServices {
 
 				break;
 			case 'Leader':
-				let employeeNumbers = [data.employeeNumber];
-				Employee.find({ reportsTo: data.employeeNumber })
+				let employeeNumbers = [res.locals.auth.employeeNumber];
+				Employee.find({ reportsTo: res.locals.auth.employeeNumber })
 					.then((employees) => {
 						employees.forEach((employee) => {
 							employeeNumbers.push(employee.employeeNumber);
@@ -41,13 +41,13 @@ class CustomersServices {
 		}
 	};
 
-	getCustomerByNumber = async (data, req, res, next) => {
-		switch (data.jobTitle) {
+	getCustomerByNumber = async (req, res) => {
+		switch (res.locals.auth.jobTitle) {
 			case 'Staff':
 				Customer.findOne(
 					{
 						customerNumber: req.params.customerNumber,
-						salesRepEmployeeNumber: data.employeeNumber,
+						salesRepEmployeeNumber: res.locals.auth.employeeNumber,
 					},
 					(err, customer) => {
 						if (err) {
@@ -62,13 +62,13 @@ class CustomersServices {
 					const customer = await Customer.findOne({
 						customerNumber: req.params.customerNumber,
 					});
-					if (customer.salesRepEmployeeNumber === data.employeeNumber) {
+					if (customer.salesRepEmployeeNumber === res.locals.auth.employeeNumber) {
 						res.json(customer);
 					} else {
 						const employee = await Employee.findOne({
 							employeeNumber: customer.salesRepEmployeeNumber,
 						});
-						if (employee.reportsTo === data.employeeNumber) {
+						if (employee.reportsTo === res.locals.auth.employeeNumber) {
 							res.json(customer);
 						} else {
 							res.send('Not authorize this customer' + err);
@@ -92,15 +92,15 @@ class CustomersServices {
 		}
 	};
 
-	createCustomer = async (data, req, res, next) => {
+	createCustomer = async (req, res) => {
 		const newCustomer = new Customer(req.body);
-		switch (data.jobTitle) {
+		switch (res.locals.auth.jobTitle) {
 			case 'Staff':
 				//check customerNumber is exist
 				try {
 					const customer = await Customer.findOne({
 						customerNumber: req.body.customerNumber,
-						salesRepEmployeeNumber: data.employeeNumber,
+						salesRepEmployeeNumber: res.locals.auth.employeeNumber,
 					});
 					if (customer) {
 						res.send('Customer already exists');
@@ -125,7 +125,7 @@ class CustomersServices {
 					if (customer) {
 						res.send('Customer already exists');
 					} else {
-						if (req.body.salesRepEmployeeNumber === data.employeeNumber) {
+						if (req.body.salesRepEmployeeNumber === res.locals.auth.employeeNumber) {
 							newCustomer.save((err, customer) => {
 								if (err) {
 									res.send(err);
@@ -136,7 +136,7 @@ class CustomersServices {
 							const employee = await Employee.findOne({
 								employeeNumber: req.body.salesRepEmployeeNumber,
 							});
-							if (employee.reportsTo === data.employeeNumber) {
+							if (employee.reportsTo === res.locals.auth.employeeNumber) {
 								newCustomer.save((err, customer) => {
 									if (err) {
 										res.send(err);
@@ -177,14 +177,14 @@ class CustomersServices {
 		}
 	};
 
-	updateCustomer = async (data, req, res, next) => {
-		switch (data.jobTitle) {
+	updateCustomer = async (req, res) => {
+		switch (res.locals.auth.jobTitle) {
 			case 'Leader':
 				try {
 					const customer = await Customer.findOne({
 						customerNumber: req.body.customerNumber,
 					});
-					if (customer.salesRepEmployeeNumber === data.employeeNumber) {
+					if (customer.salesRepEmployeeNumber === res.locals.auth.employeeNumber) {
 						Customer.findOneAndUpdate(
 							{ customerNumber: req.body.customerNumber },
 							req.body,
@@ -200,7 +200,7 @@ class CustomersServices {
 						const employee = await Employee.findOne({
 							employeeNumber: customer.salesRepEmployeeNumber,
 						});
-						if (employee.reportsTo === data.employeeNumber) {
+						if (employee.reportsTo === res.locals.auth.employeeNumber) {
 							Customer.findOneAndUpdate(
 								{ customerNumber: req.body.customerNumber },
 								req.body,
@@ -236,14 +236,14 @@ class CustomersServices {
 		}
 	};
 
-	updatePartialCustomer = async (data, req, res, next) => {
-		switch (data.jobTitle) {
+	updatePartialCustomer = async (req, res) => {
+		switch (res.locals.auth.jobTitle) {
 			case 'Leader':
 				try {
 					const customer = await Customer.findOne({
 						customerNumber: req.body.customerNumber,
 					});
-					if (customer.salesRepEmployeeNumber === data.employeeNumber) {
+					if (customer.salesRepEmployeeNumber === res.locals.auth.employeeNumber) {
 						Customer.findOneAndUpdate(
 							{ customerNumber: req.body.customerNumber },
 							req.body,
@@ -258,7 +258,7 @@ class CustomersServices {
 						const employee = await Employee.findOne({
 							employeeNumber: customer.salesRepEmployeeNumber,
 						});
-						if (employee.reportsTo === data.employeeNumber) {
+						if (employee.reportsTo === res.locals.auth.employeeNumber) {
 							Customer.findOneAndUpdate(
 								{ customerNumber: req.body.customerNumber },
 								req.body,
@@ -292,14 +292,14 @@ class CustomersServices {
 		}
 	};
 
-	deleteCustomer = async (data, req, res, next) => {
-		switch (data.jobTitle) {
+	deleteCustomer = async (req, res) => {
+		switch (res.locals.auth.jobTitle) {
 			case 'Leader':
 				try {
 					const customer = await Customer.findOne({
 						customerNumber: req.params.customerNumber,
 					});
-					if (customer.salesRepEmployeeNumber === data.employeeNumber) {
+					if (customer.salesRepEmployeeNumber === res.locals.auth.employeeNumber) {
 						Customer.findOneAndDelete(
 							{
 								customerNumber: req.params.customerNumber,
@@ -315,7 +315,7 @@ class CustomersServices {
 						const employee = await Employee.findOne({
 							employeeNumber: customer.salesRepEmployeeNumber,
 						});
-						if (employee.reportsTo === data.employeeNumber) {
+						if (employee.reportsTo === res.locals.auth.employeeNumber) {
 							Customer.findOneAndDelete(
 								{
 									customerNumber: req.params.customerNumber,

@@ -1,7 +1,7 @@
 const Employee = require('../models/Employee.js');
 
 class EmployeeService {
-	getAllEmployees = (data, req, res, next) => {
+	getAllEmployees = (req, res) => {
 		Employee.find({}, (err, employees) => {
 			if (err) {
 				res.send(err);
@@ -10,7 +10,7 @@ class EmployeeService {
 		});
 	};
 
-	getEmployeeByNumber = (data, req, res, next) => {
+	getEmployeeByNumber = (req, res) => {
 		Employee.find(
 			{ employeeNumber: req.params.employeeNumber },
 			(err, employee) => {
@@ -22,19 +22,18 @@ class EmployeeService {
 		);
 	};
 
-	createEmployee = (data, req, res, next) => {
+	createEmployee = (req, res) => {
 		//check if employee already exists
-		Employee.find(
+		Employee.findOne(
 			{ employeeNumber: req.body.employeeNumber },
-			(err, employees) => {
+			(err, employee) => {
 				if (err) {
 					res.status(500).json({
 						message: 'Internal server error',
 						error: err,
 					});
-				}
-				if (employees.length > 0) {
-					res.status(400).send({
+				} else if (employee) {
+					res.status(409).json({
 						message: 'Employee already exists',
 					});
 				} else {
@@ -50,7 +49,7 @@ class EmployeeService {
 		);
 	};
 
-	updateEmployee = (data, req, res, next) => {
+	updateEmployee = (req, res) => {
 		Employee.findOneAndUpdate(
 			{ employeeNumber: req.body.employeeNumber },
 			req.body,
@@ -64,7 +63,7 @@ class EmployeeService {
 		);
 	};
 
-	updatePartialEmployee = (data, req, res, next) => {
+	updatePartialEmployee = (req, res) => {
 		Employee.findOneAndUpdate(
 			{ employeeNumber: req.body.employeeNumber },
 			req.body,
@@ -77,7 +76,7 @@ class EmployeeService {
 		);
 	};
 
-	deleteEmployee = (data, req, res, next) => {
+	deleteEmployee = (req, res) => {
 		Employee.findOneAndDelete(
 			{ employeeNumber: req.params.employeeNumber },
 			(err, employee) => {

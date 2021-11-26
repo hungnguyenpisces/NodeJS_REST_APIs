@@ -9,7 +9,8 @@ const auth = (roles) => {
 			const data = jwt.verify(token, secret);
 			const role = data.jobTitle;
 			if (roles.includes(role)) {
-				return next(data);
+                res.locals.auth = data;
+				return next();
 			}
 			return res.status(403).json('Forbidden');
 		} catch (error) {
