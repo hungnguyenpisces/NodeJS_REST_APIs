@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { AppError } = require('../utils/errorshandle.js');
 
 const auth = (roles) => {
 	return (req, res, next) => {
@@ -6,15 +7,25 @@ const auth = (roles) => {
 		const secret = process.env.TOKEN_SECRET;
 		try {
 			const token = authorization.replace('Bearer ', '');
+			if (!token) {
+				throw new Error();
+			}
+
 			const data = jwt.verify(token, secret);
+
 			const role = data.jobTitle;
+			if (!role) {
+				throw new Error();
+			}
+
 			if (roles.includes(role)) {
-                res.locals.auth = data;
+				res.locals.auth = data;
 				return next();
 			}
-			return res.status(403).json('Forbidden');
+
+			throw new AppError('Forbidden.', 403);
 		} catch (error) {
-			res.status(401).json('Unauthorized');
+			throw new AppError('Unauthorized.', 401);
 		}
 	};
 };

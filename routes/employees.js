@@ -11,9 +11,7 @@ router.get('/',auth(['President','Manager','Leader']), employees.getAllEmployees
 
 router.post('/', validate.employee, auth(['President','Manager']), employees.createEmployee);
 
-router.put('/',auth(['President','Manager']), employees.updateEmployee);
-
-router.patch('/',auth(['President','Manager']), employees.updatePartialEmployee);
+router.put('/', validate.employee, auth(['President','Manager']), employees.updateEmployee);
 
 router.delete('/:employeeNumber',auth(['President']), employees.deleteEmployee);
 

@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const user = new Schema({
-	username: String,
+	username: { type: String, unique: true },
 	password: String,
-	employeeNumber: Number,
+	employeeNumber: { type: Number, unique: true },
 });
 const User = mongoose.model('User', user);
 

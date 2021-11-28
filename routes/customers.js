@@ -13,8 +13,6 @@ router.post('/', validate.customer, auth(['President', 'Manager', 'Leader', 'Sta
 
 router.put('/', auth(['President', 'Manager', 'Leader']), customers.updateCustomer);
 
-router.patch('/', auth(['President', 'Manager', 'Leader']), customers.updatePartialCustomer);
-
 router.delete('/:customerNumber', auth(['President', 'Manager', 'Leader']), customers.deleteCustomer);
 
 module.exports = router;

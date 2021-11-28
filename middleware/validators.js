@@ -9,6 +9,9 @@ class Validators {
 					.required()
 					.regex(
 						/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]{6,}$/
+					)
+					.message(
+						'Password must contain at least one lowercase letter, one uppercase letter, one number and one special character'
 					),
 				employeeNumber: Joi.number().required().positive(),
 			}),
