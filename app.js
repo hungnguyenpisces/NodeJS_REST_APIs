@@ -4,7 +4,9 @@ const port = 3000;
 require('dotenv').config();
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
-
+const swaggerUIExpress = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerYAML = YAML.load('./swagger.yaml');
 const {
 	AppError,
 	handleError,
@@ -25,25 +27,10 @@ routers(app);
 app.listen(port, function () {
 	console.log('Server is runing... http://localhost:' + port);
 });
-
-app.get('/throw', (req, res) => {
-	throw new AppError('Random Error!', 404);
-});
-
-app.get(
-	'/throw-async',
-	handleError(async (req, res) => {
-		await (async () => {
-			throw new Error();
-		})();
-	})
-);
+app.use('/docs', swaggerUIExpress.serve, swaggerUIExpress.setup(swaggerYAML)); // using YAML
 
 app.all('*', function (req, res) {
-	res.status(404).json({
-		status: 404,
-		message: `URL Not Found`,
-	});
+	throw new AppError('URL Not found', 404);
 });
 
 app.use(errors());

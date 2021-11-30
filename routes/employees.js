@@ -5,14 +5,36 @@ const employees = require('../services/employees.js');
 const validate = require('../middleware/validators.js');
 
 //Employee
-router.get('/:employeeNumber',auth(['President','Manager','Leader']), employees.getEmployeeByNumber);
+router.get(
+	'/:employeeNumber',
+	auth(['President', 'Manager', 'Leader']),
+	employees.getEmployeeByNumber
+);
 
-router.get('/',auth(['President','Manager','Leader']), employees.getAllEmployees);
+router.get(
+	'/',
+	auth(['President', 'Manager', 'Leader']),
+	employees.getAllEmployees
+);
 
-router.post('/', validate.employee, auth(['President','Manager']), employees.createEmployee);
+router.post(
+	'/',
+	auth(['President', 'Manager']),
+	validate.employee,
+	employees.createEmployee
+);
 
-router.put('/', validate.employee, auth(['President','Manager']), employees.updateEmployee);
+router.put(
+	'/',
+	auth(['President', 'Manager']),
+	validate.employee,
+	employees.updateEmployee
+);
 
-router.delete('/:employeeNumber',auth(['President']), employees.deleteEmployee);
+router.delete(
+	'/:employeeNumber',
+	auth(['President']),
+	employees.deleteEmployee
+);
 
 module.exports = router;

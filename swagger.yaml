@@ -1,0 +1,904 @@
+openapi: 3.0.0
+
+info:
+  title: NodeJS 02 - Assignment
+  description: NodeJS RESTful APIs with MongoDB
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000
+    description: Dev server
+
+paths:
+  /customers:
+    summary: Get all or create customers
+    get:
+      summary: Return a (list of) customer(s).
+      tags:
+        - Customers
+      parameters:
+        - name: customerNumber
+          in: query
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/CustomerResponse'
+                  - $ref: '#/components/schemas/CustomerResponse'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500'
+    post:
+      summary: Create a customer.
+      tags:
+        - Customers
+      requestBody:
+        description: A full data form of customer
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ValidationError'
+                  - $ref: '#/components/schemas/Error400'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500'
+
+  /customers/{customerNumber}:
+    summary: Get, or update, or delete a specific customer
+    parameters:
+      - name: customerNumber
+        in: path
+        schema:
+          type: integer
+        required: true
+        example: 5
+    get:
+      summary: Get a customer data
+      tags:
+        - Customers
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500'
+    put:
+      summary: Fully update a customer
+      tags:
+        - Customers
+      requestBody:
+        description: A full data form of customer
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ValidationError'
+                  - $ref: '#/components/schemas/Error400'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500'
+    patch: # DNF
+      summary: Partially update a customer
+      tags:
+        - Customers
+    delete:
+      summary: Delete a customer
+      tags:
+        - Customers
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500'
+
+  /employees:
+    summary: Get all or create employees
+    get:
+      summary: Get all employees
+      tags:
+        - Employees
+      parameters:
+        - name: employeeNumber
+          in: query
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/EmployeeResponse'
+                  - $ref: '#/components/schemas/EmployeeResponse'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500'
+    post:
+      summary: Create an employee
+      tags:
+        - Employees
+      requestBody:
+        summary: A full form data of employee
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Employee'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeResponse'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ValidationError'
+                  - $ref: '#/components/schemas/Error400'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500'
+
+  /employees/{employeeNumber}:
+    summary: Get, or update, or delete a specific employee
+    parameters:
+      - name: employeeNumber
+        in: path
+        schema:
+          type: integer
+        required: true
+    get:
+      summary: Get an employee data
+      tags:
+        - Employees
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeResponse'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500'
+    put:
+      summary: Fully update an employee
+      tags:
+        - Employees
+      requestBody:
+        summary: A full form data of employee
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Employee'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeResponse'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ValidationError'
+                  - $ref: '#/components/schemas/Error400'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500'
+    patch: # DNF
+      summary: Partially update an employee
+      tags:
+        - Employees
+    delete:
+      summary: Delete an employee
+      tags:
+        - Employees
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500'
+
+  /users/register:
+    summary: Create an user
+    post:
+      tags:
+        - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ValidationError'
+                  - $ref: '#/components/schemas/Error400'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500'
+
+  /users/login:
+    summary: Login
+    post: # DNF
+      tags:
+        - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/LoginResponse1'
+                  - $ref: '#/components/schemas/LoginResponse2'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error500'
+
+components:
+  schemas:
+    Customer:
+      type: object
+      properties:
+        customerNumber:
+          type: integer
+          required: true
+          min: 1
+          example: 100
+        customerName:
+          type: string
+          minLength: 5
+          maxLength: 50
+          required: true
+          example: 'John Doe'
+        contactLastName:
+          type: string
+          minLength: 3
+          maxLength: 50
+          required: true
+          example: 'Doe'
+        contactFirstName:
+          type: string
+          minLength: 3
+          maxLength: 50
+          required: true
+          example: 'John'
+        phone:
+          type: string
+          minLength: 8
+          maxLength: 20
+          required: true
+          example: '0123456789'
+        addressLine1:
+          type: string
+          minLength: 10
+          maxLength: 50
+          required: true
+          example: '12th floor, Block 40, Main Avenue, New York'
+        addressLine2:
+          type: string
+          minLength: 10
+          maxLength: 50
+          nullable: true
+          example: null
+        city:
+          type: string
+          minLength: 2
+          maxLength: 50
+          required: true
+          example: 'New York'
+        state:
+          type: string
+          minLength: 2
+          maxLength: 50
+          nullable: true
+          example: 'New York'
+        postalCode:
+          type: string
+          minLength: 5
+          maxLength: 15
+          nullable: true
+          example: '12345'
+        country:
+          type: string
+          minLength: 2
+          maxLength: 50
+          required: true
+          example: 'USA'
+        salesRepEmployeeNumber:
+          type: integer
+          min: 1
+          nullable: true
+          example: 421
+        creditLimit:
+          description: Only accept format decimal(10,2)
+          type: number
+          nullable: true
+          example: 1000.55
+    CustomerResponse:
+      type: object
+      properties:
+        customerNumber:
+          type: integer
+          required: true
+          min: 1
+          example: 100
+        customerName:
+          type: string
+          minLength: 5
+          maxLength: 50
+          required: true
+          example: 'John Doe'
+        contactLastName:
+          type: string
+          minLength: 3
+          maxLength: 50
+          required: true
+          example: 'Doe'
+        contactFirstName:
+          type: string
+          minLength: 3
+          maxLength: 50
+          required: true
+          example: 'John'
+        phone:
+          type: string
+          minLength: 8
+          maxLength: 20
+          required: true
+          example: '0123456789'
+        addressLine1:
+          type: string
+          minLength: 10
+          maxLength: 50
+          required: true
+          example: '12th floor, Block 40, Main Avenue, New York'
+        addressLine2:
+          type: string
+          minLength: 10
+          maxLength: 50
+          nullable: true
+          example: null
+        city:
+          type: string
+          minLength: 2
+          maxLength: 50
+          required: true
+          example: 'New York'
+        state:
+          type: string
+          minLength: 2
+          maxLength: 50
+          nullable: true
+          example: 'New York'
+        postalCode:
+          type: string
+          minLength: 5
+          maxLength: 15
+          nullable: true
+          example: '12345'
+        country:
+          type: string
+          minLength: 2
+          maxLength: 50
+          required: true
+          example: 'USA'
+        salesRepEmployeeNumber:
+          $ref: '#/components/schemas/Employee'
+        creditLimit:
+          description: Only accept format decimal(10,2)
+          type: number
+          nullable: true
+          example: 1000.55
+    Employee:
+      type: object
+      properties:
+        employeeNumber:
+          type: integer
+          min: 1
+          required: true
+          example: 425
+        lastName:
+          type: string
+          minLength: 3
+          maxLength: 50
+          required: true
+          example: 'Smith'
+        firstName:
+          type: string
+          minLength: 3
+          maxLength: 50
+          required: true
+          example: 'Haley'
+        extension:
+          type: string
+          maxLength: 50
+          required: true
+          example: 'Jr.'
+        email:
+          type: string
+          format: email
+          minLength: 10
+          maxLength: 50
+          required: true
+          pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+          example: 'HaleySmith@company.com'
+        officeCode:
+          type: string
+          maxLength: 10
+          required: true
+          example: 'NY'
+        reportsTo:
+          type: integer
+          min: 1
+          nullable: true
+        jobTitle:
+          type: string
+          enum:
+            - President
+            - Manager
+            - Leader
+            - Staff
+          required: true
+          example: 'Staff'
+    EmployeeResponse:
+      type: object
+      properties:
+        employeeNumber:
+          type: integer
+          min: 1
+          required: true
+          example: 425
+        lastName:
+          type: string
+          minLength: 3
+          maxLength: 50
+          required: true
+          example: 'Smith'
+        firstName:
+          type: string
+          minLength: 3
+          maxLength: 50
+          required: true
+          example: 'Haley'
+        extension:
+          type: string
+          maxLength: 50
+          required: true
+          example: 'Jr.'
+        email:
+          type: string
+          format: email
+          minLength: 10
+          maxLength: 50
+          required: true
+          pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+          example: 'HaleySmith@company.com'
+        officeCode:
+          type: string
+          maxLength: 10
+          required: true
+          example: 'NY'
+        reportsTo:
+          $ref: '#/components/schemas/Employee'
+        jobTitle:
+          type: string
+          enum:
+            - President
+            - Manager
+            - Leader
+            - Staff
+          required: true
+          example: 'Staff'
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 20
+          required: true
+          example: 'HaleyS'
+        password:
+          type: string
+          minLength: 6
+          maxLength: 100
+          pattern: /(?=.*[0-9])(?=.*[!@#$%^&*?-_\/><;:'",|\\\.])/
+          required: true
+          example: '@val1dp@55w0rd'
+        employeeNumber:
+          type: integer
+          min: 1
+          required: true
+          example: 425
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 20
+          required: true
+          example: HaleyS
+        password:
+          type: string
+          minLength: 6
+          maxLength: 100
+          required: true
+          example: '@val1dp@55w0rd'
+    Error400:
+      type: object
+      properties:
+        error:
+          type: string
+          enum: [No data match, Invalid customerNumber, Invalid employeeNumber, Missing credential(s)]
+          required: true
+          example: No data match
+    ValidationError:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 400
+        error:
+          type: string
+          example: Bad Request
+        message:
+          type: string
+          example: Validation failed
+        validation:
+          type: object
+          properties:
+            body:
+              type: object
+              properties:
+                source:
+                  type: string
+                  example: body
+                keys:
+                  type: array
+                  items:
+                    type: string
+                    example: lastName
+                message:
+                  type: string
+                  example: "'lastName' length must be at least 3 characters long"
+    Error401:
+      type: object
+      properties:
+        error:
+          type: string
+          enum: [Unauthorized]
+          required: true
+          example: Unauthorized
+    Error403:
+      type: object
+      properties:
+        error:
+          type: string
+          enum: [Forbidden]
+          required: true
+          example: Forbidden
+    Error500:
+      type: object
+      properties:
+        error:
+          type: string
+          required: true
+          example: Internal server error
+    DeleteResponse:
+      type: object
+      properties:
+        success:
+          type: string
+          enum:
+            - Successfully deleted 1 employee
+            - Successfully deleted 1 customer
+    RegisterResponse:
+      type: object
+      properties:
+        success:
+          type: string
+          enum: [1 user created]
+    LoginResponse1:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        token:
+          type: string
+    LoginResponse2:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string

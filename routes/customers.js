@@ -5,14 +5,35 @@ const customers = require('../services/customers.js');
 const validate = require('../middleware/validators.js');
 
 //Customer
-router.get('/:customerNumber', auth(['President', 'Manager', 'Leader', 'Staff']), customers.getCustomerByNumber);
+router.get(
+	'/:customerNumber',
+	auth(['President', 'Manager', 'Leader', 'Staff']),
+	customers.getCustomerByNumber
+);
 
-router.get('/', auth(['President', 'Manager', 'Leader', 'Staff']), customers.getAllCustomers);
+router.get(
+	'/',
+	auth(['President', 'Manager', 'Leader', 'Staff']),
+	customers.getAllCustomers
+);
 
-router.post('/', validate.customer, auth(['President', 'Manager', 'Leader', 'Staff']), customers.createCustomer);
+router.post(
+	'/',
+	auth(['President', 'Manager', 'Leader', 'Staff']),
+	validate.customer,
+	customers.createCustomer
+);
 
-router.put('/', auth(['President', 'Manager', 'Leader']), customers.updateCustomer);
+router.put(
+	'/',
+	auth(['President', 'Manager', 'Leader']),
+	customers.updateCustomer
+);
 
-router.delete('/:customerNumber', auth(['President', 'Manager', 'Leader']), customers.deleteCustomer);
+router.delete(
+	'/:customerNumber',
+	auth(['President', 'Manager', 'Leader']),
+	customers.deleteCustomer
+);
 
 module.exports = router;

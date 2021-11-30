@@ -106,7 +106,7 @@ class Users {
 							user,
 						});
 					} else {
-                        logger.warn('Authentication failed! Incorrect password');
+						logger.warn('Authentication failed! Incorrect password');
 						return res.status(400).json('Incorrect password');
 					}
 				} else {

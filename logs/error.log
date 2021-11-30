@@ -8,3 +8,27 @@ Nov-28-2021 23:22:52: ERROR: Error
 Nov-28-2021 23:26:33: ERROR: data and hash arguments required
 [Nov-28-2021 23:37:52]: [ERROR]: Username already exists
 [Nov-28-2021 23:40:11]: [ERROR]: Employee number does not exist
+[Nov-29-2021 00:20:21]: [ERROR]: URL Not found
+[Nov-29-2021 00:21:04]: [ERROR]: URL Not found
+[Nov-29-2021 00:24:05]: [ERROR]: URL Not found
+[Nov-29-2021 00:24:06]: [ERROR]: URL Not found
+[Nov-29-2021 00:27:26]: [ERROR]: URL Not found
+[Nov-29-2021 00:27:29]: [ERROR]: URL Not found
+[Nov-29-2021 00:30:52]: [ERROR]: URL Not found
+[Nov-29-2021 09:47:14]: [ERROR]: URL Not found
+[Nov-29-2021 09:47:16]: [ERROR]: URL Not found
+[Nov-29-2021 09:48:16]: [ERROR]: URL Not found
+[Nov-29-2021 09:48:27]: [ERROR]: Unauthorized.
+[Nov-29-2021 09:48:38]: [ERROR]: Unauthorized.
+[Nov-29-2021 10:23:38]: [ERROR]: Unauthorized.
+[Nov-29-2021 10:27:32]: [ERROR]: Unauthorized.
+[Nov-29-2021 10:27:44]: [ERROR]: Unauthorized.
+[Nov-29-2021 10:28:13]: [ERROR]: E11000 duplicate key error collection: nodejs_mongodb_dev.employees index: email_1 dup key: { email: "ha@gmail.com" }
+[Nov-29-2021 10:28:38]: [ERROR]: E11000 duplicate key error collection: nodejs_mongodb_dev.employees index: email_1 dup key: { email: "ha@gmail.com" }
+[Nov-29-2021 10:28:47]: [ERROR]: E11000 duplicate key error collection: nodejs_mongodb_dev.employees index: email_1 dup key: { email: "ha@gmail.com" }
+[Nov-29-2021 10:28:53]: [ERROR]: E11000 duplicate key error collection: nodejs_mongodb_dev.employees index: email_1 dup key: { email: "ha@gmail.com" }
+[Nov-29-2021 10:29:52]: [ERROR]: Username already exists
+[Nov-29-2021 10:30:02]: [ERROR]: Username already exists
+[Nov-29-2021 10:30:10]: [ERROR]: Employee number is owned by another user
+[Nov-29-2021 10:30:52]: [ERROR]: Unauthorized.
+[Nov-29-2021 10:30:56]: [ERROR]: Unauthorized.
