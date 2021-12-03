@@ -1,15 +1,13 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { user } = require('../middleware/validators.js');
 const Employee = require('../models/Employee.js');
 const User = require('../models/User.js');
+const LogMaker = require('./LogMaker.js');
 const { AppError, handleError } = require('../utils/errorshandle.js');
-const salt = process.env.SALT;
-const secret = process.env.TOKEN_SECRET;
 const { logger } = require('../utils/logger.js');
 class Users {
 	hashPassword = (password) => {
-		return bcrypt.hashSync(password, bcrypt.genSaltSync(+salt));
+		return bcrypt.hashSync(password, bcrypt.genSaltSync(+process.env.SALT));
 	};
 
 	isPasswordValid = (password, hashedPwd) => {
@@ -17,38 +15,64 @@ class Users {
 	};
 
 	generateToken = (user) => {
-		const { employee } = user;
-		const { employeeNumber, officeCode, jobTitle } = employee;
-		return jwt.sign({ employeeNumber, officeCode, jobTitle }, secret, {
-			expiresIn: '1h',
-		});
+		const { username, employee } = user;
+		console.log(username, employee);
+		const { employeeNumber, officeCode, role } = employee;
+		return jwt.sign(
+			{ username, employeeNumber, officeCode, role },
+			process.env.TOKEN_SECRET,
+			{
+				expiresIn: '1h',
+			}
+		);
 	};
 
 	createUser = handleError(async (req, res) => {
 		const { username, password, employeeNumber } = req.body;
 
 		const checkUsername = await User.findOne({ username }).catch((err) => {
+			LogMaker.createLog('error', err.message, username, 'createUser');
 			throw new AppError(err.message, 500);
 		});
 		if (checkUsername) {
+			LogMaker.createLog(
+				'warning',
+				'Username already exists',
+				username,
+				'createUser'
+			);
 			throw new AppError('Username already exists', 400);
 		}
 
 		const checkEmployee = await Employee.findOne({ employeeNumber }).catch(
 			(err) => {
+				LogMaker.createLog('error', err.message, username, 'createUser');
 				throw new AppError(err.message, 500);
 			}
 		);
 		if (!checkEmployee) {
+			LogMaker.createLog(
+				'warning',
+				'Employee number does not exist',
+				username,
+				'createUser'
+			);
 			throw new AppError('Employee number does not exist', 400);
 		}
 
 		const checkUserNumber = await User.findOne({ employeeNumber }).catch(
 			(err) => {
+				LogMaker.createLog('error', err.message, username, 'createUser');
 				throw new AppError(err.message, 500);
 			}
 		);
 		if (checkUserNumber) {
+			LogMaker.createLog(
+				'warning',
+				'Employee number is owned by another user',
+				username,
+				'createUser'
+			);
 			throw new AppError('Employee number is owned by another user', 400);
 		}
 
@@ -59,9 +83,19 @@ class Users {
 		})
 			.save()
 			.catch((err) => {
+				LogMaker.createLog('error', err.message, username, 'createUser');
 				throw new AppError(err.message, 500);
 			});
+
 		logger.info(`User ${user.username} created`);
+
+		LogMaker.createLog(
+			'info',
+			`User ${user.username} created`,
+			user.username,
+			'new users registered'
+		);
+
 		return res.status(201).json({
 			message: 'User created successfully',
 			user,
@@ -89,7 +123,21 @@ class Users {
 						employeeNumber: 1,
 						officeCode: 1,
 						reportsTo: 1,
-						jobTitle: 1,
+						role: 1,
+					},
+					createdAt: {
+						$dateToString: {
+							format: '%Y-%m-%d %H:%M:%S',
+							date: '$createdAt',
+							timezone: '+07',
+						},
+					},
+					updatedAt: {
+						$dateToString: {
+							format: '%Y-%m-%d %H:%M:%S',
+							date: '$updatedAt',
+							timezone: '+07',
+						},
 					},
 				},
 			},
@@ -100,6 +148,12 @@ class Users {
 					if (this.isPasswordValid(req.body.password, user.password)) {
 						const token = this.generateToken(user);
 						logger.info('Authentication successful!');
+						LogMaker.createLog(
+							'info',
+							'Authentication successful!',
+							user.username,
+							'userLogin'
+						);
 						return res.json({
 							message: 'Authentication successful!',
 							token,
@@ -107,10 +161,22 @@ class Users {
 						});
 					} else {
 						logger.warn('Authentication failed! Incorrect password');
+						LogMaker.createLog(
+							'warning',
+							'Authentication failed! Incorrect password',
+							user.username,
+							'userLogin'
+						);
 						return res.status(400).json('Incorrect password');
 					}
 				} else {
 					logger.warn('User not found');
+					LogMaker.createLog(
+						'warning',
+						'User not found',
+						user.username,
+						'userLogin'
+					);
 					return res.status(404).json('User not found');
 				}
 			})

@@ -32,3 +32,56 @@ Nov-28-2021 23:26:33: ERROR: data and hash arguments required
 [Nov-29-2021 10:30:10]: [ERROR]: Employee number is owned by another user
 [Nov-29-2021 10:30:52]: [ERROR]: Unauthorized.
 [Nov-29-2021 10:30:56]: [ERROR]: Unauthorized.
+[Dec-02-2021 14:29:26]: [ERROR]: Unauthorized.
+[Dec-02-2021 15:24:00]: [ERROR]: Unauthorized.
+[Dec-02-2021 15:24:25]: [ERROR]: Unauthorized.
+[Dec-02-2021 16:27:23]: [ERROR]: Unauthorized.
+[Dec-02-2021 16:54:51]: [ERROR]: Employee number is owned by another user
+[Dec-02-2021 17:01:54]: [ERROR]: Username already exists
+[Dec-02-2021 17:30:36]: [ERROR]: Username already exists
+[Dec-02-2021 17:37:54]: [ERROR]: Unrecognized pipeline stage name: '$dateToString'
+[Dec-02-2021 17:38:06]: [ERROR]: Unrecognized pipeline stage name: '$dateToString'
+[Dec-02-2021 17:48:26]: [ERROR]: PlanExecutor error during aggregation :: caused by :: unrecognized time zone identifier: "Asia/Hanoi"
+[Dec-02-2021 18:46:42]: [ERROR]: Username already exists
+[Dec-02-2021 22:03:44]: [ERROR]: Username already exists
+[Dec-03-2021 00:00:06]: [ERROR]: (intermediate value).createLogs is not a function
+[Dec-03-2021 00:01:08]: [ERROR]: (intermediate value).createLogs is not a function
+[Dec-03-2021 00:10:41]: [ERROR]: Username already exists
+[Dec-03-2021 00:14:35]: [ERROR]: Username already exists
+[Dec-03-2021 00:14:41]: [ERROR]: Username already exists
+[Dec-03-2021 00:28:37]: [ERROR]: Employee number is owned by another user
+[Dec-03-2021 00:29:02]: [ERROR]: Employee number does not exist
+[Dec-03-2021 00:30:07]: [ERROR]: URL Not found
+[Dec-03-2021 00:33:42]: [ERROR]: URL Not found
+[Dec-03-2021 00:34:10]: [ERROR]: URL Not found
+[Dec-03-2021 00:34:45]: [ERROR]: URL Not found
+[Dec-03-2021 00:41:05]: [ERROR]: Employee number does not exist
+[Dec-03-2021 01:14:40]: [ERROR]: URL Not found
+[Dec-03-2021 01:16:20]: [ERROR]: URL Not found
+[Dec-03-2021 01:17:47]: [ERROR]: URL Not found
+[Dec-03-2021 01:18:01]: [ERROR]: URL Not found
+[Dec-03-2021 01:26:32]: [ERROR]: URL Not found
+[Dec-03-2021 01:28:09]: [ERROR]: URL Not found
+[Dec-03-2021 01:28:29]: [ERROR]: URL Not found
+[Dec-03-2021 01:30:06]: [ERROR]: URL Not found
+[Dec-03-2021 01:40:14]: [ERROR]: URL Not found
+[Dec-03-2021 01:40:25]: [ERROR]: URL Not found
+[Dec-03-2021 20:05:58]: [ERROR]: Employee number does not exist
+[Dec-03-2021 20:22:40]: [ERROR]: Employee number does not exist
+[Dec-03-2021 20:23:01]: [ERROR]: Employee number does not exist
+[Dec-03-2021 20:23:04]: [ERROR]: Employee number does not exist
+[Dec-03-2021 20:23:51]: [ERROR]: Employee number does not exist
+[Dec-03-2021 20:24:31]: [ERROR]: Employee number does not exist
+[Dec-03-2021 20:24:40]: [ERROR]: Employee number does not exist
+[Dec-03-2021 20:25:22]: [ERROR]: Employee number does not exist
+[Dec-03-2021 20:26:09]: [ERROR]: Validation failed
+[Dec-03-2021 20:32:36]: [ERROR]: Validation failed
+[Dec-03-2021 20:40:28]: [ERROR]: Validation failed
+[Dec-03-2021 20:41:09]: [ERROR]: Validation failed
+[Dec-03-2021 21:00:29]: [ERROR]: Validation failed
+[Dec-03-2021 21:12:05]: [ERROR]: "username" length must be at least 3 characters long
+[Dec-03-2021 21:16:23]: [ERROR]: "username" length must be at least 3 characters long
+[Dec-03-2021 21:19:02]: [ERROR]: "username" length must be at least 3 characters long
+[Dec-03-2021 21:29:08]: [ERROR]: "username" length must be at least 3 characters long
+[Dec-03-2021 21:30:17]: [ERROR]: "username" length must be at least 3 characters long
+[Dec-03-2021 21:30:35]: [ERROR]: "username" length must be at least 3 characters long

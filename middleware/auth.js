@@ -4,6 +4,11 @@ const { AppError } = require('../utils/errorshandle.js');
 const auth = (roles) => {
 	return (req, res, next) => {
 		const authorization = req.headers.authorization;
+		if (!authorization) {
+			return res.status(401).json({
+				message: 'You are not authorized',
+			});
+		}
 		const secret = process.env.TOKEN_SECRET;
 		try {
 			const token = authorization.replace('Bearer ', '');
@@ -13,7 +18,7 @@ const auth = (roles) => {
 
 			const data = jwt.verify(token, secret);
 
-			const role = data.jobTitle;
+			const role = data.role;
 			if (!role) {
 				throw new Error();
 			}

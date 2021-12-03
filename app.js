@@ -7,13 +7,17 @@ const { errors } = require('celebrate');
 const swaggerUIExpress = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerYAML = YAML.load('./swagger.yaml');
+
+// const mongoose = require('mongoose');
+// mongoose.set('debug', true);
+
 const {
 	AppError,
 	handleError,
 	handleErrors,
 } = require('./utils/errorshandle.js');
 
-const routers = require('./routes/index.js');
+const router = require('./routes/index.js');
 const database = require('./config/database.js');
 
 const morgan = require('morgan');
@@ -22,7 +26,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 database.connect();
-routers(app);
+app.use(router);
 
 app.listen(port, function () {
 	console.log('Server is runing... http://localhost:' + port);

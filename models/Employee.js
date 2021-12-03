@@ -10,6 +10,7 @@ const employee = new Schema({
 	officeCode: String,
 	reportsTo: Number,
 	jobTitle: String,
+	role: Number,
 });
 const Employee = mongoose.model('Employee', employee);
 

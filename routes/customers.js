@@ -1,39 +1,27 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth.js');
-const customers = require('../services/customers.js');
-const validate = require('../middleware/validators.js');
+const Customers = require('../services/Customers.js');
+const Validate = require('../middleware/Validators.js');
 
 //Customer
 router.get(
 	'/:customerNumber',
-	auth(['President', 'Manager', 'Leader', 'Staff']),
-	customers.getCustomerByNumber
+	auth([1, 2, 3, 4]),
+	Customers.getCustomerByNumber
 );
 
-router.get(
-	'/',
-	auth(['President', 'Manager', 'Leader', 'Staff']),
-	customers.getAllCustomers
-);
+router.get('/', auth([1, 2, 3, 4]), Customers.getAllCustomers);
 
 router.post(
 	'/',
-	auth(['President', 'Manager', 'Leader', 'Staff']),
-	validate.customer,
-	customers.createCustomer
+	auth([1, 2, 3, 4]),
+	Validate.customer,
+	Customers.createCustomer
 );
 
-router.put(
-	'/',
-	auth(['President', 'Manager', 'Leader']),
-	customers.updateCustomer
-);
+router.put('/', auth([1, 2, 3]), Customers.updateCustomer);
 
-router.delete(
-	'/:customerNumber',
-	auth(['President', 'Manager', 'Leader']),
-	customers.deleteCustomer
-);
+router.delete('/:customerNumber', auth([1, 2, 3]), Customers.deleteCustomer);
 
 module.exports = router;

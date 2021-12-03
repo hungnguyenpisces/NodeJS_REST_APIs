@@ -1,6 +1,7 @@
 const Customer = require('../models/Customer.js');
 const Employee = require('../models/Employee.js');
 const { AppError, handleError } = require('../utils/errorshandle.js');
+const LogMaker = require('./LogMaker.js');
 
 class CustomersServices {
 	getAllCustomers = handleError(async (req, res) => {
